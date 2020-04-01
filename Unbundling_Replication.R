@@ -320,8 +320,3 @@ rm(diffs, diffDf)
 plotC1a <- covBalPlot(PM.results1)
 plotC1b <- covBalPlot(PM.results2)
 plotC1c <- covBalPlot(PM.results_B1)
-
-# Remove objects
-rm(fullData, PM.results1, PM.results2, PM.results3,
-   PM.results4, PM.results_B1, PM.results_B2a,
-   PM.results_B2b)
