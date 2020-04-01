@@ -54,25 +54,18 @@ yearlyAvg_ML <- data.frame(year = 1985:2017,
                            modelLaw = tapply(ML.data$ml, ML.data$year, mean, na.rm = TRUE),
                            modelLaw_count = tapply(ML.data$ml, ML.data$year, sum, na.rm = TRUE))
 
-# Plot from sample
-yearlyAvg_ML_full <- data.frame(year = 1985:2017, 
-                                modelLaw = tapply(fullData$ml[fullData$year >= 1985], 
-                                                  fullData$year[fullData$year >= 1985], mean, na.rm = TRUE),
-                                modelLaw_count = tapply(fullData$ml[fullData$year >= 1985], 
-                                                        fullData$year[fullData$year >= 1985], sum, na.rm = TRUE))
-
-plot2 <- ggplot(data = yearlyAvg_ML_full, aes(x = year, y = modelLaw_count)) + 
+plot2 <- ggplot(data = yearlyAvg_ML, aes(x = year, y = modelLaw_count)) + 
   geom_bar(fill = "lightgrey", color = "white", stat="identity") +
   geom_line(data = yearlyAvg_ML, aes(x = year, y = modelLaw * 79.8), 
             size = 3) +
   xlab("") + 
-  ylab("") +
+  ylab("# of Enacting States") +
   ggtitle("") +
   scale_x_continuous(breaks = seq(1985, 2017, 5)) +
   scale_y_continuous(limits = c(0, 80),
                      breaks = seq(0, 80, 15), 
                      labels = seq(0, 80, 15),
-                     sec.axis = sec_axis(~. / 79.8, name = "", 
+                     sec.axis = sec_axis(~. / 79.8, name = "Enacting States as % of All States", 
                                          breaks = seq(0, 1, .25),
                                          label = scales::percent(seq(0, 1, .25), 1L)),
                      expand = c(0,0)) +
@@ -81,7 +74,7 @@ plot2 <- ggplot(data = yearlyAvg_ML_full, aes(x = year, y = modelLaw_count)) +
         panel.grid.minor.y = element_blank(), panel.grid.major.y = element_blank()) +
   guides(linetype=FALSE)
 
-rm(ML.data)
+rm(ML.data, yearlyAvg_ML)
 
 # Estimate Main Models ----------------------------------------------------
 fullData <- read.csv("unbundling_data.csv", row.names = "X", 
@@ -210,8 +203,6 @@ summary(PE.results)
 
 
 # Figure 3 - Main Results ATT ---------------------------------------------
-theme_set(theme_bw(base_size = 22))
-
 # Main Results Plot (Figure 3)
 plot3 <- nicePMplot(PM.results2)
 
