@@ -27,9 +27,9 @@ ICCdata <- gather(ICCdata, "institution", "cases", -"year")
 ICCdata <- ICCdata[ICCdata$year < 2018, ]
 
 # Missing values warning due to "icsidCases" 0s recoded as NAs
-ggplot(ICCdata[ICCdata$institution == "iccCases" | 
-                 ICCdata$institution == "icsidCases",], 
-       aes(x = year, y = cases, fill = institution)) +
+plot1 <- ggplot(ICCdata[ICCdata$institution == "iccCases" | 
+                          ICCdata$institution == "icsidCases",], 
+                aes(x = year, y = cases, fill = institution)) +
   geom_bar(stat= "identity", position = "identity") +
   labs(title = "", x = "Year", y = "Cases Registered", fill = "") +
   scale_fill_manual(labels = c("ICC", 
@@ -42,28 +42,6 @@ ggplot(ICCdata[ICCdata$institution == "iccCases" |
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(), panel.grid.major.y = element_blank(),
         legend.position = "bottom")
-
-ggplot(ICCdata[ICCdata$institution == "iccCases" | 
-                 ICCdata$institution == "icsidCases",], 
-       aes(x = year, y = cases, fill = institution)) +
-  geom_bar(stat= "identity", position = "identity") +
-  labs(title = "", x = "Year", y = "Cases Registered", fill = "") +
-  scale_fill_manual(labels = c("ICC", 
-                               "ICSID"), values = c("darkgrey", "black")) +
-  scale_y_continuous(limits = c(0,1010), 
-                     breaks = seq(0, 1010, 250),
-                     expand = c(0,0)) +
-  scale_x_continuous(limits = c(1921, 2018),
-                     breaks = c(1921, seq(1930, 2010, 10), 2017)) +
-  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank(), panel.grid.major.y = element_blank(),
-        #legend.justification=c(1,1), 
-        legend.position=c(.2, .8),
-        legend.text = element_text(size=22), 
-        legend.background = element_rect(color = "black"),
-        legend.title = element_blank())
-
-
 rm(ICCdata)
 
 # Figure 2 - Model Law Enactment ------------------------------------------
@@ -83,7 +61,7 @@ yearlyAvg_ML_full <- data.frame(year = 1985:2017,
                                 modelLaw_count = tapply(fullData$ml[fullData$year >= 1985], 
                                                         fullData$year[fullData$year >= 1985], sum, na.rm = TRUE))
 
-ggplot(data = yearlyAvg_ML_full, aes(x = year, y = modelLaw_count)) + 
+plot2 <- ggplot(data = yearlyAvg_ML_full, aes(x = year, y = modelLaw_count)) + 
   geom_bar(fill = "lightgrey", color = "white", stat="identity") +
   geom_line(data = yearlyAvg_ML, aes(x = year, y = modelLaw * 79.8), 
             size = 3) +
