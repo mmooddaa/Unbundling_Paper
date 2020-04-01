@@ -28,10 +28,7 @@ nicePMplot <- function(pm.object) {
           panel.grid.minor.y = element_blank()) +
     xlab("Years Since Model Law Enactment") +
     ylab("Estimated Effect of Treatment on the Treated")
-  
-  #  estimates <- list(plot = plot, 
-  #estimates95 = PE.results95,
-  #estimates90 = PE.results90)
+
   return(plot)
 }
 
