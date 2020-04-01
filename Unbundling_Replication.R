@@ -6,7 +6,7 @@
 # Graphs and Matching Analysis
 
 # Set working directory to directory containing all scripts and data
-setwd("/Users/mallen/Dropbox/Papers/Unbundling RoL/Replication Files/")
+setwd("")
 
 library(PanelMatch)
 library(ggplot2)
