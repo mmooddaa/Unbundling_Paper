@@ -2,7 +2,6 @@
 
 # Function plotting matching estimates with bootstrapped standard errors
 nicePMplot <- function(pm.object) {
-  set.seed(1023)
   PE.results95 <- PanelEstimate(inference = "bootstrap", sets = pm.object, 
                                 data = fullData, CI = .95, ITER = 500)
   results95 <- as.data.frame(summary(PE.results95)$summary)
