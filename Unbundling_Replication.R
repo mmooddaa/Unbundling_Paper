@@ -16,9 +16,69 @@ library(dplyr)
 ### Load plotting functions
 source("plotFunctions.R")
 
-# Figure 1 - ICC Caseload -------------------------------------------------
 theme_set(theme_bw(base_size = 22))
 
+# Plot 1 - TGI Growth -----------------------------------------------------
+filePath <- "https://static-content.springer.com/esm/art%3A10.1007%2Fs11558-019-09366-w/MediaObjects/11558_2019_9366_MOESM3_ESM.csv"
+test <- read.csv(filePath)
+rm(filePath)
+
+TGIdata <- subset(TGIdata, govtask_implement == 1 | 
+                    TGIdata$govtask_monitoring == 1 | 
+                    TGIdata$govtask_setting == 1)
+
+TGI_TS <- data.frame(year = 1980:2016)
+
+temp <- data.frame(count = cumsum(tapply(TGIdata$id, TGIdata$strt_yr, length)))
+TGI_TS$count <- temp$count[match(TGI_TS$year, row.names(temp))]
+rm(temp)
+
+# 1980 had 7 cumulative TGIs
+TGI_TS$count <- c(7, na.locf(TGI_TS$count))
+
+TGI_TS_end <- data.frame(end = cumsum(tapply(TGIdata$id, TGIdata$end_yr, length)))
+TGI_TS$end <- TGI_TS_end$end[match(TGI_TS$year, row.names(TGI_TS_end))]
+TGI_TS$end <- c(rep(0, 21), na.locf(TGI_TS$end))
+TGI_TS$count <- TGI_TS$count - TGI_TS$end
+rm(TGI_TS_end)
+
+# Commerce related issues:
+# regdev, trade, commerce, bankfinance, labor, legal, monetary policy, development
+TGIdata <- mutate(TGIdata, issue_trade +
+                    issue_commerce +
+                    issue_bankfinance +
+                    issue_labor +
+                    issue_legal +
+                    issue_monetarypolicy)
+
+colnames(TGIdata)[length(colnames(TGIdata))] <- "commerceIssue"
+TGIdata$commerceIssue[TGIdata$commerceIssue > 0] <- 1
+
+temp <- data.frame(commerce = cumsum(tapply(TGIdata$commerceIssue, TGIdata$strt_yr, sum)))
+TGI_TS$commerce <- temp$commerce[match(TGI_TS$year, row.names(temp))]
+TGI_TS$commerce <- c(3, na.locf(TGI_TS$commerce))
+rm(temp)
+
+ggplot(data = TGI_TS[TGI_TS$year >= 1980, ], aes(x = year, y = count)) +
+  geom_area(fill = "grey") +
+  geom_area(aes(x = year, y = commerce), fill = "black") +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 205),
+                     breaks = seq(0, 200, 25)) +
+  scale_x_continuous(breaks = seq(1980, 2015, 5),
+                     labels = seq(1980, 2015, 5)) +
+  labs(x = element_blank(), y = element_blank()) +
+  annotate(geom = "text", x = 2007.5, y = 20, size = 11,
+           label = "Commerce-related",
+           hjust = 0.5, lineheight = .75, color = "white") +
+  annotate(geom = "text", x = 2008, y = 95, size = 11,
+           label = "Total",
+           hjust = 0.5, lineheight = .75, color = "black") +
+  theme(panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank())
+
+# Figure 2 - ICC Caseload -------------------------------------------------
 ICCdata <- readxl::read_xlsx("/Users/mallen/Box Sync/Cornell/Data/ICC Data/ICC Total Cases/ICC Cases.xlsx")
 
 ICCdata$icsidCases[ICCdata$icsidCases == 0] <- as.integer(NA)
@@ -27,13 +87,13 @@ ICCdata <- gather(ICCdata, "institution", "cases", -"year")
 ICCdata <- ICCdata[ICCdata$year < 2018, ]
 
 # Missing values warning due to "icsidCases" 0s recoded as NAs
-plot1 <- ggplot(ICCdata[ICCdata$institution == "iccCases" | 
+plot2 <- ggplot(ICCdata[ICCdata$institution == "iccCases" | 
                           ICCdata$institution == "icsidCases",], 
                 aes(x = year, y = cases, fill = institution)) +
   geom_bar(stat= "identity", position = "identity") +
   labs(title = "", x = "Year", y = "Cases Registered", fill = "") +
   scale_fill_manual(labels = c("ICC", 
-                               "ICSID"), values = c("darkgrey", "black")) +
+                               "ICSID"), values = c("grey", "black")) +
   scale_y_continuous(limits = c(0,1010), 
                      breaks = seq(0, 1010, 250),
                      expand = c(0,0)) +
@@ -44,7 +104,7 @@ plot1 <- ggplot(ICCdata[ICCdata$institution == "iccCases" |
         legend.position = "bottom")
 rm(ICCdata)
 
-# Figure 2 - Model Law Enactment ------------------------------------------
+# Figure 3 - Model Law Enactment ------------------------------------------
 # Import Model Law Enactment Data
 ML.data  <- read.csv("/Users/mallen/Box Sync/Cornell/Data/UNICTRAL Model Law/Model_Law_Data.csv", 
                      row.names = "X")
@@ -54,7 +114,7 @@ yearlyAvg_ML <- data.frame(year = 1985:2017,
                            modelLaw = tapply(ML.data$ml, ML.data$year, mean, na.rm = TRUE),
                            modelLaw_count = tapply(ML.data$ml, ML.data$year, sum, na.rm = TRUE))
 
-plot2 <- ggplot(data = yearlyAvg_ML, aes(x = year, y = modelLaw_count)) + 
+plot3 <- ggplot(data = yearlyAvg_ML, aes(x = year, y = modelLaw_count)) + 
   geom_bar(fill = "lightgrey", color = "white", stat="identity") +
   geom_line(data = yearlyAvg_ML, aes(x = year, y = modelLaw * 79.8), 
             size = 3) +
@@ -198,13 +258,12 @@ PM.results_B2b <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
 # Table 3 - Standard Errors -----------------------------------------------
 # Plug in the PM object into the "sets = " option
 PE.results <- PanelEstimate(inference = "bootstrap", sets = PM.results2, 
-                            data = fullData, CI = .95, ITER = 1000)
+                            data = fullData, CI = .95, ITER = 500)
 summary(PE.results)
 
-
-# Figure 3 - Main Results ATT ---------------------------------------------
+# Figure 4 - Main Results ATT ---------------------------------------------
 # Main Results Plot (Figure 3)
-plot3 <- nicePMplot(PM.results2)
+plot4 <- nicePMplot(PM.results2)
 
 # Plots in Appendix B
 plotB1 <- nicePMplot(PM.results_B1)
@@ -212,7 +271,7 @@ plotB2a <- nicePMplot(PM.results_B2a)
 plotB2b <- nicePMplot(PM.results_B2b)
 
 
-# Figure 4 - Disaggregated Plot -------------------------------------------
+# Figure 5 - Disaggregated Plot -------------------------------------------
 namesList <- names(PM.results2$att)
 
 # Create holder dfs
@@ -289,7 +348,7 @@ diffs        <- gather(diffs, key = "status", value = "diff", -time)
 
 rm(weightsDf, cntrlDelta, treatedDelta)
 
-plot4 <- ggplot(data = diffs[diffs$time >= 0, ], aes(x = time, y = diff, color = status)) +
+plot5 <- ggplot(data = diffs[diffs$time >= 0, ], aes(x = time, y = diff, color = status)) +
   geom_line(size = 2, show.legend = FALSE) +
   geom_point(size = 8, aes(shape = status)) +
   geom_hline(yintercept = 0, linetype = "dashed", size = 1) +
@@ -300,8 +359,10 @@ plot4 <- ggplot(data = diffs[diffs$time >= 0, ], aes(x = time, y = diff, color =
                       values = c("#56B4E9", "tomato2")) +
   scale_shape_manual(labels = c("No Model Law", "Model Law"), 
                      values=c(19, 17)) +
-  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank()) +
+  theme(panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(), 
+        panel.grid.major.y = element_blank()) +
   theme(legend.position="bottom")
 
 rm(diffs, diffDf)

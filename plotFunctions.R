@@ -24,7 +24,8 @@ nicePMplot <- function(pm.object) {
     scale_x_continuous(breaks = lead) +
     theme(panel.grid.major.x = element_blank(), 
           panel.grid.minor.x = element_blank(),
-          panel.grid.minor.y = element_blank()) +
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.y = element_blank()) +
     xlab("Years Since Model Law Enactment") +
     ylab("Estimated Effect of Treatment on the Treated")
 
@@ -68,7 +69,9 @@ covBalPlot <- function(pm.object) {
     scale_x_continuous(limits = c(0, 1.5), breaks = c(0, .25, .5, .75, 1, 1.25, 1.5)) +
     geom_line(data = refLine, aes(x = x, y = y, color = NULL), linetype = 2) +
     ylab("Post-Refinement") +
-    xlab("Pre-Refinement")
+    xlab("Pre-Refinement") +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank())
   
   return(plot)
 }
