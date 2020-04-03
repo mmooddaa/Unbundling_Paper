@@ -80,7 +80,7 @@ plot1 <- ggplot(data = TGI_TS[TGI_TS$year >= 1980, ], aes(x = year, y = count)) 
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank())
 
-rm(TGIdata, TGI_Ts)
+rm(TGIdata, TGI_TS)
 
 # Figure 2 - ICC Caseload -------------------------------------------------
 ICCdata <- readxl::read_xlsx("/Users/mallen/Box Sync/Cornell/Data/ICC Data/ICC Total Cases/ICC Cases.xlsx")
