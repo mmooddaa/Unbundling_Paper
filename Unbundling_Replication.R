@@ -12,6 +12,7 @@ library(PanelMatch)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(zoo)
 
 ### Load plotting functions
 source("plotFunctions.R")
@@ -19,8 +20,9 @@ source("plotFunctions.R")
 theme_set(theme_bw(base_size = 22))
 
 # Plot 1 - TGI Growth -----------------------------------------------------
+# filePath currently set for URL, if URL broken download and change filePath.
 filePath <- "https://static-content.springer.com/esm/art%3A10.1007%2Fs11558-019-09366-w/MediaObjects/11558_2019_9366_MOESM3_ESM.csv"
-test <- read.csv(filePath)
+TGIdata <- read.csv(filePath)
 rm(filePath)
 
 TGIdata <- subset(TGIdata, govtask_implement == 1 | 
@@ -59,7 +61,7 @@ TGI_TS$commerce <- temp$commerce[match(TGI_TS$year, row.names(temp))]
 TGI_TS$commerce <- c(3, na.locf(TGI_TS$commerce))
 rm(temp)
 
-ggplot(data = TGI_TS[TGI_TS$year >= 1980, ], aes(x = year, y = count)) +
+plot1 <- ggplot(data = TGI_TS[TGI_TS$year >= 1980, ], aes(x = year, y = count)) +
   geom_area(fill = "grey") +
   geom_area(aes(x = year, y = commerce), fill = "black") +
   scale_y_continuous(expand = c(0,0), limits = c(0, 205),
@@ -77,6 +79,8 @@ ggplot(data = TGI_TS[TGI_TS$year >= 1980, ], aes(x = year, y = count)) +
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank())
+
+rm(TGIdata, TGI_Ts)
 
 # Figure 2 - ICC Caseload -------------------------------------------------
 ICCdata <- readxl::read_xlsx("/Users/mallen/Box Sync/Cornell/Data/ICC Data/ICC Total Cases/ICC Cases.xlsx")
