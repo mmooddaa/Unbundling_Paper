@@ -21,7 +21,7 @@ theme_set(theme_bw(base_size = 22))
 
 # Plot 1 - TGI Growth -----------------------------------------------------
 # filePath currently set for URL, if URL broken download and change filePath.
-# See Westwinder (2019): https://link.springer.com/article/10.1007%2Fs11558-019-09366-w
+# See Westerwinter (2019): https://link.springer.com/article/10.1007%2Fs11558-019-09366-w
 
 filePath <- "https://static-content.springer.com/esm/art%3A10.1007%2Fs11558-019-09366-w/MediaObjects/11558_2019_9366_MOESM3_ESM.csv"
 TGIdata <- read.csv(filePath)
