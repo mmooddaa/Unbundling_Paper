@@ -159,7 +159,7 @@ PM.results1 <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                           + lag("trade", 1)
                           + lag("growth", 1)
                           + lag("lnPOP", 1),
-                          qoi = "att", verbose = TRUE, matching = FALSE,
+                          qoi = "att", verbose = TRUE, matching = TRUE,
                           outcome.var = "v2x_rule",
                           lead = 0:5, forbid.treatment.reversal = TRUE)
 # Table 3, Column 2 ====
@@ -175,7 +175,7 @@ PM.results2 <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                           + lag("trade", 1)
                           + lag("growth", 1)
                           + lag("lnPOP", 1),
-                          qoi = "att", verbose = TRUE, matching = FALSE,
+                          qoi = "att", verbose = TRUE, matching = TRUE,
                           outcome.var = "v2x_rule",
                           lead = 0:5, forbid.treatment.reversal = TRUE)
 # Table 3, Column 3 ====
@@ -191,7 +191,7 @@ PM.results3 <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                           + lag("trade", 1)
                           + lag("growth", 1)
                           + lag("lnPOP", 1),
-                          qoi = "att", verbose = TRUE, matching = FALSE,
+                          qoi = "att", verbose = TRUE, matching = TRUE,
                           outcome.var = "v2x_rule",
                           lead = 0:5, forbid.treatment.reversal = TRUE)
 # Table 3, Column 4 ====
@@ -207,7 +207,7 @@ PM.results4 <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                           + lag("trade", 1)
                           + lag("growth", 1)
                           + lag("lnPOP", 1),
-                          qoi = "att", verbose = TRUE, matching = FALSE,
+                          qoi = "att", verbose = TRUE, matching = TRUE,
                           outcome.var = "v2x_rule",
                           lead = 0:5, forbid.treatment.reversal = TRUE)
 
@@ -225,7 +225,7 @@ PM.results_B1 <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                             + lag("trade", 1)
                             + lag("growth", 1)
                             + lag("lnPOP", 1),
-                            qoi = "att", verbose = TRUE, matching = FALSE,
+                            qoi = "att", verbose = TRUE, matching = TRUE,
                             outcome.var = "v2x_rule",
                             lead = 0:5, forbid.treatment.reversal = TRUE)
 # Table B2a
@@ -241,7 +241,7 @@ PM.results_B2a <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                              + lag("trade", 1)
                              + lag("growth", 1)
                              + lag("lnPOP", 1),
-                             qoi = "att", verbose = TRUE, matching = FALSE,
+                             qoi = "att", verbose = TRUE, matching = TRUE,
                              outcome.var = "v2x_rule",
                              lead = 0:10, forbid.treatment.reversal = TRUE)
 # Table B2b 
@@ -257,7 +257,7 @@ PM.results_B2b <- PanelMatch(lag = 5, time.id = "year", unit.id = "iso3c",
                              + lag("trade", 1)
                              + lag("growth", 1)
                              + lag("lnPOP", 1),
-                             qoi = "att", verbose = TRUE, matching = FALSE,
+                             qoi = "att", verbose = TRUE, matching = TRUE,
                              outcome.var = "v2x_rule",
                              lead = 0:10, forbid.treatment.reversal = TRUE)
 
